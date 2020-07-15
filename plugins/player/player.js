@@ -1,6 +1,8 @@
-const YoutubeDL = require("ytdl-core");
+const Play = require("./play");
+const Stop = require("./stop");
 
-let commands = ["Play", "Pause", "Resume", "Skip", "Stop"];
+let commands = ["play", "pause", "resume", "skip", "stop"];
+let queue = {};
 
 exports.isPlayerCommand = {
   verify: function (command) {
@@ -13,27 +15,16 @@ exports.isPlayerCommand = {
   },
 };
 
-exports.run = async (client, msg, args, ops) => {
+exports.run = async (client, msg, cmd, sufix, ops) => {
   if (!msg.member.voice.channel)
     return msg.channel.send("Por favor, conecte-se a um canal de voz");
 
-  if (msg.guild.me.voice.channel)
-    return msg.channel.send("Ja setou conectado nesse canal");
-
-  if (!args)
+  if (!sufix)
     return msg.channel.send("Por favor, coloque uma URL seguido do comando");
 
-  let validate = await YoutubeDL.validateURL(args);
-
-  if (!validate) return msg.channel.send("URL invalido");
-
-  let info = await YoutubeDL.getInfo(args);
-
-  let connection = await msg.member.voice.channel.join();
-
-  let dispatcher = await connection.play(
-    YoutubeDL(args, { filter: "audioonly" })
-  );
-
-  msg.channel.send(`Reproduzindo: ${info.title}`);
+  if (cmd == "play") {
+    Play.run(client, msg, sufix, ops);
+  } else if (cmd == "stop") {
+    Stop.run(msg);
+  }
 };

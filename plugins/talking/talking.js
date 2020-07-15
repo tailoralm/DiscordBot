@@ -1,3 +1,16 @@
+let commands = ["oi", "como-voce-ta?", "falatu"];
+
+exports.isTalkCommand = {
+  verify: function (command) {
+    for (c of commands) {
+      if (command.startsWith(c)) {
+        return c;
+      }
+    }
+    return "";
+  },
+};
+
 exports.bemVindo = function () {
   return "Seja bem vindo seu arrombado!";
 };
@@ -6,13 +19,14 @@ exports.talk = function (msg) {
   return answers[msg].answer;
 };
 
-exports.commands = ["!oi", "!como voce ta?"];
-
 answers = {
-  "!oi": {
+  oi: {
     answer: "Olá pra você também, seu corno!",
   },
-  "!como voce ta?": {
+  "como-voce-ta?": {
     answer: "Não tão bem como você, mas gostaria",
+  },
+  falatu: {
+    answer: "Não enche ô arrombado!",
   },
 };
